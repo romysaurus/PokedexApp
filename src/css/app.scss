@@ -1,1 +1,63 @@
-// app global css in SCSS form
+.normal {
+  background-color: grey;
+}
+
+.fire {
+  background-color: rgb(255, 115, 0);
+}
+
+.water {
+  background-color: rgba(49, 79, 211, 0.644);
+}
+
+.electric {
+  background-color: rgb(207, 205, 43);
+}
+
+.grass {
+  background-color: rgb(107, 201, 107);
+}
+
+.ice {
+  background-color: aqua;
+}
+
+.fighting {
+  background-color: rgb(160, 70, 35);
+}
+
+.poison {
+  background-color: rgb(94, 16, 184);
+}
+
+.ground {
+  background-color: rgb(180, 137, 102);
+}
+
+.flying {
+  background-color: rgb(131, 190, 194);
+}
+
+.psychic {
+  background-color: rgb(214, 93, 149);
+}
+
+.bug {
+  background-color: rgb(43, 94, 38);
+}
+
+.rock {
+  background-color: burlywood;
+}
+
+.ghost {
+  background-color: rgb(133, 93, 151);
+}
+
+.dragon {
+  background-color: rgb(99, 99, 209);
+}
+
+.fairy {
+  background-color: rgba(230, 26, 185, 0.466);
+}
