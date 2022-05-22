@@ -1,19 +1,26 @@
 import axios from 'axios';
-import { ref } from 'vue';
+import { Pokemon } from 'src/components/models';
+import { ref, Ref } from 'vue';
 
 const pokemonService = () => {
-  const pokemon = ref();
+  const pokemon: Ref<Array<Pokemon>> = ref([]);
 
   axios
-    .get('https://stoplight.io/mocks/appwise-be/pokemon/57519009/pokemon')
-    .then((response: { data: [] }) => {
+    .get<Array<Pokemon>>(
+      'https://stoplight.io/mocks/appwise-be/pokemon/57519009/pokemon'
+    )
+    .then((response) => {
       pokemon.value = response.data;
     })
     .catch((error) => {
       console.log(error);
     });
 
-  return { pokemon };
+  const favoriteArray: Ref<Array<Pokemon>> = ref([]);
+
+  const selectedPokemon: Ref<Pokemon> = ref() as Ref<Pokemon>;
+
+  return { pokemon, selectedPokemon, favoriteArray };
 };
 
 const singleton = pokemonService();
