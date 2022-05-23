@@ -5,7 +5,6 @@
     <div class="search">
       <form @submit.prevent="pressed()">
         <q-input
-          rounded
           filled
           v-model="search"
           type="search"
@@ -19,11 +18,6 @@
     </div>
 
     <div id="cardsContainer">
-      <CardComponent
-        :title="'Mijn team'"
-        :info="'x pokemons'"
-        :style="{ 'box-shadow': boxShadow }"
-      />
       <CardComponent
         :title="'Favorieten'"
         :info="favoritesNumber + ' pokemons'"
@@ -129,13 +123,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.search {
-  margin: 1rem;
-}
 #body {
   background-color: rgb(241, 239, 239);
   margin-top: -3rem;
   padding-top: 4rem;
+  margin-right: -0.1rem;
 }
 
 h4 {
@@ -145,8 +137,13 @@ h4 {
   margin-bottom: 1rem;
 }
 
+.search {
+  margin: 1rem;
+}
+
 #cardsContainer {
   display: flex;
+  justify-content: center;
   margin: 1rem 1rem;
 }
 
@@ -155,6 +152,11 @@ h4 {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  #card {
+    width: 14rem;
+    background-position-x: 119%;
   }
 }
 </style>

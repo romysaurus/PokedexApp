@@ -33,7 +33,12 @@
       </div>
     </div>
     <div id="pokemonStart" v-if="pokemonDetails">
-      <div id="name">{{ pokemonDetails.forms[0].name }}</div>
+      <div id="name">
+        {{
+          pokemonDetails.forms[0].name.charAt(0).toUpperCase() +
+          pokemonDetails.forms[0].name.slice(1)
+        }}
+      </div>
       <img
         class="center"
         id="img"
