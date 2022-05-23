@@ -302,31 +302,35 @@
         <div id="moveContainer" class="infoContainer">
           <div class="moveset">
             <div class="level">
-              Level {{ test[4].version_group_details[0].level_learned_at }}
+              Level
+              {{ pokemonMoves[4].version_group_details[0].level_learned_at }}
             </div>
             <div class="moveName">
-              {{ test[4].move.name }}
+              {{ pokemonMoves[4].move.name }}
             </div>
             <div class="level">
-              Level {{ test[10].version_group_details[0].level_learned_at }}
+              Level
+              {{ pokemonMoves[10].version_group_details[0].level_learned_at }}
             </div>
             <div class="moveName">
-              {{ test[10].move.name }}
+              {{ pokemonMoves[10].move.name }}
             </div>
           </div>
 
           <div class="moveset">
             <div class="level">
-              Level {{ test[14].version_group_details[0].level_learned_at }}
+              Level
+              {{ pokemonMoves[14].version_group_details[0].level_learned_at }}
             </div>
             <div class="moveName">
-              {{ test[14].move.name }}
+              {{ pokemonMoves[14].move.name }}
             </div>
             <div class="level">
-              Level {{ test[6].version_group_details[0].level_learned_at }}
+              Level
+              {{ pokemonMoves[6].version_group_details[0].level_learned_at }}
             </div>
             <div class="moveName">
-              {{ test[6].move.name }}
+              {{ pokemonMoves[6].move.name }}
             </div>
           </div>
         </div>
@@ -355,7 +359,7 @@ export default defineComponent({
 
     const pokemonDetails: Ref<PokemonDetails> = ref() as Ref<PokemonDetails>;
 
-    const test: Ref<Array<Move>> = ref() as Ref<Array<Move>>;
+    const pokemonMoves: Ref<Array<Move>> = ref() as Ref<Array<Move>>;
 
     watch(
       () => route.params.id,
@@ -364,7 +368,7 @@ export default defineComponent({
         axios.get<PokemonDetails>(url).then(
           (response) => {
             pokemonDetails.value = response.data;
-            test.value = pokemonDetails.value.moves;
+            pokemonMoves.value = pokemonDetails.value.moves;
             console.log(response);
           },
           (error) => {
@@ -404,7 +408,7 @@ export default defineComponent({
       pokemonDetails,
       editFavorites,
       favorite,
-      test,
+      pokemonMoves,
     };
   },
 });

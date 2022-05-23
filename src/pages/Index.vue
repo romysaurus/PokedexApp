@@ -1,21 +1,22 @@
 <template>
   <div id="body">
     <h4>Pokédex</h4>
-    <q-input
-      rounded
-      class="searchBar"
-      v-model="search"
-      filled
-      type="search"
-      placeholder="Pokemon zoeken"
-    >
-      <template v-slot:prepend>
-        <q-icon name="search" />
-      </template>
-    </q-input>
 
-    {{ search }}
-    {{ searchy }}
+    <div class="search">
+      <form @submit.prevent="pressed()">
+        <q-input
+          rounded
+          filled
+          v-model="search"
+          type="search"
+          placeholder="Pokemon zoeken"
+        >
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </form>
+    </div>
 
     <div id="cardsContainer">
       <CardComponent
@@ -52,7 +53,6 @@ import { useRouter } from 'vue-router';
 import { usePokemon } from 'src/services/pokemon.services';
 import CardComponent from '../components/CardComponent.vue';
 import PokemonListComponent from '../components/PokemonListComponent.vue';
-import { matSearch } from '@quasar/extras/material-icons';
 import { Pokemon } from 'src/components/models';
 
 export default defineComponent({
@@ -65,19 +65,44 @@ export default defineComponent({
 
     const router = useRouter();
 
-    // const pokemonSorted = pokemon.value;
+    // ATTEMPT AT FUNCTION TO FILTER POKEMON AND PLACE IN ARRAY TO BE DISPLAYED AFTER SEARCH
+    //  COMPARISON PART WORKS, ERROR ON .PUSH
+
+    /*
+    const filterPokemon: Ref<Array<Pokemon>> = ref() as Ref<Array<Pokemon>>;
+
+    function filterItems(query: string) {
+      for (let i = 0; i < pokemon.value.length; i++) {
+        if (pokemon.value[i].name.includes(query.toLowerCase())) {
+          console.log(pokemon.value[i]);
+          //filterPokemon.value.push(test.value);
+        } else {
+          window.alert('nothing found!');
+        }
+      }
+    }
+
+    */
+
+    const search = ref('');
+
+    // ALTERNATE SEARCH, WORKS ONLY ON NUMBER AND REROUTES DIRECTLY TO DETAILS PAGE
+
+    function pressed() {
+      if (+search.value <= 0 || +search.value > 151) {
+        window.alert(
+          'There are only 151 Pokémon. Enter a number between 1 and 151 (151 included)'
+        );
+      } else {
+        router.push({ path: `/${+search.value}` }).catch(console.error);
+      }
+    }
 
     const boxShadow = 'inset 0 0 0 1000px rgb(122 59 225 / 93%)';
-
-    const searchIcon = matSearch;
 
     const favorites = favoriteArray.value;
 
     const favoritesNumber = favorites.length;
-
-    const search = ref('');
-    const searchx = search.value;
-    const searchy = ref(searchx.toLowerCase());
 
     function setPokemon(selectPokemon: Pokemon) {
       selectedPokemon.value = selectPokemon;
@@ -87,33 +112,26 @@ export default defineComponent({
     function goToFavorites() {
       router.push({ path: '/favorieten' }).catch(console.error);
     }
-    /*
-    const pokemonTypes: Ref<[]> = pokemon.value[1].types;
-
-    for (let i = 0; i < pokemonTypes.value.length; i++) {
-      console.log(pokemonTypes.value[i].type);
-      i++;
-    }
-
-    */
 
     return {
       pokemon,
       boxShadow,
-      searchIcon,
       setPokemon,
       goToFavorites,
       selectedPokemon,
       favoriteArray,
       favoritesNumber,
       search,
-      searchy,
+      pressed,
     };
   },
 });
 </script>
 
 <style scoped>
+.search {
+  margin: 1rem;
+}
 #body {
   background-color: rgb(241, 239, 239);
   margin-top: -3rem;
@@ -130,10 +148,6 @@ h4 {
 #cardsContainer {
   display: flex;
   margin: 1rem 1rem;
-}
-
-.searchBar {
-  margin: 1rem;
 }
 
 @media only screen and (min-width: 768px) {
