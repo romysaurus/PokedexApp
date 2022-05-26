@@ -1,26 +1,7 @@
 <template>
   <div
     id="page"
-    :class="
-      'fire' ||
-      'normal' ||
-      'water' ||
-      'electric' ||
-      'grass' ||
-      'ice' ||
-      'fighting' ||
-      'poison' ||
-      'ground' ||
-      'flying' ||
-      'Psychic' ||
-      'bug' ||
-      'rock' ||
-      'ghost' ||
-      'dragon' ||
-      'fairy'
-        ? pokemonDetails.types[0].type.name
-        : 'normal'
-    "
+    :class="possibleTypes.includes(firstType) ? firstType : 'normal'"
   >
     <div id="header">
       <BackComponent id="back" @click="goBack()" />
@@ -32,6 +13,7 @@
         favorite_border
       </div>
     </div>
+
     <div id="pokemonStart" v-if="pokemonDetails">
       <div id="name">
         {{
@@ -39,12 +21,22 @@
           pokemonDetails.forms[0].name.slice(1)
         }}
       </div>
-      <img
-        class="center"
-        id="img"
-        :src="pokemonDetails.sprites.front_default"
-        alt=""
-      />
+
+      <div>
+        <vue-easy-lightbox
+          :visible="visible"
+          :imgs="imageDefault"
+          @hide="hideLightbox"
+        ></vue-easy-lightbox>
+        <img
+          @click="visible = true"
+          class="center"
+          id="img"
+          :src="imageDefault"
+          alt=""
+        />
+      </div>
+
       <div id="infoBody">
         <!-- about section -->
         <div id="about">
@@ -58,62 +50,20 @@
                   <div
                     class="typePokemon"
                     :class="
-                      'fire' ||
-                      'normal' ||
-                      'water' ||
-                      'electric' ||
-                      'grass' ||
-                      'ice' ||
-                      'fighting' ||
-                      'poison' ||
-                      'ground' ||
-                      'flying' ||
-                      'Psychic' ||
-                      'bug' ||
-                      'rock' ||
-                      'ghost' ||
-                      'dragon' ||
-                      'fairy'
-                        ? pokemonDetails.types[0].type.name
-                        : 'normal'
+                      possibleTypes.includes(firstType) ? firstType : 'normal'
                     "
                   >
-                    {{
-                      pokemonDetails.types[0].type.name
-                        .charAt(0)
-                        .toUpperCase() +
-                      pokemonDetails.types[0].type.name.slice(1)
-                    }}
+                    {{ firstType.charAt(0).toUpperCase() + firstType.slice(1) }}
                   </div>
                   <span
                     class="typePokemon"
                     :class="
-                      'fire' ||
-                      'normal' ||
-                      'water' ||
-                      'electric' ||
-                      'grass' ||
-                      'ice' ||
-                      'fighting' ||
-                      'poison' ||
-                      'ground' ||
-                      'flying' ||
-                      'Psychic' ||
-                      'bug' ||
-                      'rock' ||
-                      'ghost' ||
-                      'dragon' ||
-                      'fairy'
-                        ? pokemonDetails.types[1].type.name
-                        : 'normal'
+                      possibleTypes.includes(secondType) ? secondType : 'normal'
                     "
-                    v-if="pokemonDetails.types[1]"
+                    v-if="secondType"
                   >
                     {{
-                      pokemonDetails.types[1].type.name
-                        .charAt(0)
-                        .toUpperCase() +
-                      pokemonDetails.types[1].type.name.slice(1)
+                      secondType.charAt(0).toUpperCase() + secondType.slice(1)
                     }}
                   </span>
                 </div>
@@ -308,34 +258,34 @@
           <div class="moveset">
             <div class="level">
               Level
-              {{ pokemonMoves[4].version_group_details[0].level_learned_at }}
+              {{ pokemonMoves[0].version_group_details[0].level_learned_at }}
             </div>
             <div class="moveName">
-              {{ pokemonMoves[4].move.name }}
+              {{ pokemonMoves[0].move.name }}
             </div>
             <div class="level">
               Level
-              {{ pokemonMoves[10].version_group_details[0].level_learned_at }}
+              {{ pokemonMoves[1].version_group_details[0].level_learned_at }}
             </div>
             <div class="moveName">
-              {{ pokemonMoves[10].move.name }}
+              {{ pokemonMoves[1].move.name }}
             </div>
           </div>
 
           <div class="moveset">
             <div class="level">
               Level
-              {{ pokemonMoves[14].version_group_details[0].level_learned_at }}
+              {{ pokemonMoves[2].version_group_details[0].level_learned_at }}
             </div>
             <div class="moveName">
-              {{ pokemonMoves[14].move.name }}
+              {{ pokemonMoves[2].move.name }}
             </div>
             <div class="level">
               Level
-              {{ pokemonMoves[6].version_group_details[0].level_learned_at }}
+              {{ pokemonMoves[3].version_group_details[0].level_learned_at }}
             </div>
             <div class="moveName">
-              {{ pokemonMoves[6].move.name }}
+              {{ pokemonMoves[3].move.name }}
             </div>
           </div>
         </div>
@@ -351,30 +301,62 @@ import { useRouter, useRoute } from 'vue-router';
 import BackComponent from '../components/BackComponent.vue';
 import axios from 'axios';
 import { Move, Pokemon, PokemonDetails } from 'src/components/models';
+import VueEasyLightbox from 'vue-easy-lightbox';
+import { LocalStorage } from 'quasar';
 
 export default defineComponent({
   components: {
     BackComponent,
+    VueEasyLightbox,
   },
   setup() {
     const router = useRouter();
     const route = useRoute();
 
-    const { selectedPokemon, favoriteArray } = usePokemon();
+    const { selectedPokemon, favoriteArray, pokemon, possibleTypes } =
+      usePokemon();
 
     const pokemonDetails: Ref<PokemonDetails> = ref() as Ref<PokemonDetails>;
 
     const pokemonMoves: Ref<Array<Move>> = ref() as Ref<Array<Move>>;
+    const firstType: Ref<string> = ref('');
+    const secondType: Ref<string> = ref('');
+    const imageDefault: Ref<string> = ref('');
+    const imageShiny: Ref<string> = ref('');
+    const favorite: Ref<boolean> = ref(false);
+
+    function goBack() {
+      router.go(-1);
+    }
 
     watch(
       () => route.params.id,
-      (newID) => {
-        const url = `https://pokeapi.co/api/v2/pokemon/${+newID}`;
+      (id) => {
+        const url = `https://pokeapi.co/api/v2/pokemon/${+id}`;
+        const selected: Ref<Pokemon> = ref(
+          pokemon.value.find((poke) => poke.id === +id)
+        ) as Ref<Pokemon>;
+        selectedPokemon.value = selected.value;
+        favorite.value = false;
+        for (let index = 0; index < favoriteArray.value.length; index++) {
+          if (
+            JSON.stringify(favoriteArray.value[index]) ===
+            JSON.stringify(selectedPokemon.value)
+          ) {
+            favorite.value = true;
+          }
+        }
+
         axios.get<PokemonDetails>(url).then(
           (response) => {
             pokemonDetails.value = response.data;
             pokemonMoves.value = pokemonDetails.value.moves;
-            console.log(response);
+            firstType.value = pokemonDetails.value.types[0].type.name;
+            imageDefault.value = pokemonDetails.value.sprites.front_default;
+            imageShiny.value = pokemonDetails.value.sprites.front_shiny;
+            if (pokemonDetails.value.types[1]) {
+              secondType.value = pokemonDetails.value.types[1].type.name;
+            }
           },
           (error) => {
             console.log(error);
@@ -384,28 +366,60 @@ export default defineComponent({
       { immediate: true }
     );
 
-    const favorite: Ref<boolean> = ref(false);
+    if (localStorage.getItem('favoriteArray')) {
+      const getLocalStorage: string = LocalStorage.getItem(
+        'favoriteArray'
+      ) as string;
+      const localFavoriteArray: Array<Pokemon> = JSON.parse(
+        getLocalStorage
+      ) as Array<Pokemon>;
 
-    function editFavorites(selectPokemon: Pokemon) {
-      if (favoriteArray.value.includes(selectPokemon) === false) {
-        favoriteArray.value.push(selectPokemon);
-        window.alert('Toegevoegd aan favorieten!');
-        favorite.value = true;
-      } else {
-        const placeInArray = favoriteArray.value.indexOf(selectPokemon);
-        window.alert('Verwijderd uit favorieten!');
-        favorite.value = false;
-        if (placeInArray === 0) {
-          favoriteArray.value.shift();
-        } else {
-          favoriteArray.value.splice(placeInArray, placeInArray);
+      for (let i = 0; i < localFavoriteArray.length; i++) {
+        const name: string = localFavoriteArray[i].name;
+        if (name !== localFavoriteArray[i].name) {
+          if (
+            JSON.stringify(favoriteArray.value[i]) !==
+            JSON.stringify(localFavoriteArray[i])
+          ) {
+            favoriteArray.value.push(localFavoriteArray[i]);
+          }
         }
       }
     }
 
-    function goBack() {
-      router.go(-1);
+    function editFavorites(selectPokemon: Pokemon) {
+      const alreadyFavorite = favoriteArray.value.findIndex(
+        (poke) => poke.name === selectPokemon.name
+      );
+
+      if (alreadyFavorite === -1) {
+        favoriteArray.value.push(selectPokemon);
+        favorite.value = true;
+        localStorage.setItem(
+          'favoriteArray',
+          JSON.stringify(favoriteArray.value)
+        );
+      } else {
+        favorite.value = false;
+        if (alreadyFavorite === 0) {
+          favoriteArray.value.shift();
+          localStorage.setItem(
+            'favoriteArray',
+            JSON.stringify(favoriteArray.value)
+          );
+        } else {
+          favoriteArray.value.splice(alreadyFavorite, alreadyFavorite);
+          localStorage.setItem(
+            'favoriteArray',
+            JSON.stringify(favoriteArray.value)
+          );
+        }
+      }
     }
+
+    const visible = ref(false);
+
+    const hideLightbox = () => (visible.value = false);
 
     return {
       selectedPokemon,
@@ -414,6 +428,12 @@ export default defineComponent({
       editFavorites,
       favorite,
       pokemonMoves,
+      firstType,
+      secondType,
+      visible,
+      hideLightbox,
+      imageDefault,
+      possibleTypes,
     };
   },
 });

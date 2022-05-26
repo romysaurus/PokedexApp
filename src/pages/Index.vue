@@ -48,6 +48,7 @@ import { usePokemon } from 'src/services/pokemon.services';
 import CardComponent from '../components/CardComponent.vue';
 import PokemonListComponent from '../components/PokemonListComponent.vue';
 import { Pokemon } from 'src/components/models';
+import { LocalStorage } from 'quasar';
 
 export default defineComponent({
   components: {
@@ -77,6 +78,26 @@ export default defineComponent({
     }
 
     */
+
+    if (localStorage.getItem('favoriteArray')) {
+      const getLocalStorage: string = LocalStorage.getItem(
+        'favoriteArray'
+      ) as string;
+      const localFavoriteArray: Array<Pokemon> = JSON.parse(
+        getLocalStorage
+      ) as Array<Pokemon>;
+
+      // console.log(localFavoriteArray);
+
+      for (let i = 0; i < localFavoriteArray.length; i++) {
+        if (
+          JSON.stringify(favoriteArray.value[i]) !==
+          JSON.stringify(localFavoriteArray[i])
+        ) {
+          favoriteArray.value.push(localFavoriteArray[i]);
+        }
+      }
+    }
 
     const search = ref('');
 

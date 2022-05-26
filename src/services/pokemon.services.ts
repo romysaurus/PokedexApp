@@ -20,7 +20,26 @@ const pokemonService = () => {
 
   const selectedPokemon: Ref<Pokemon> = ref() as Ref<Pokemon>;
 
-  return { pokemon, selectedPokemon, favoriteArray };
+  const possibleTypes = [
+    'fire',
+    'normal',
+    'water',
+    'electric',
+    'grass',
+    'ice',
+    'fighting',
+    'poison',
+    'ground',
+    'flying',
+    'Psychic',
+    'bug',
+    'rock',
+    'ghost',
+    'dragon',
+    'fairy',
+  ];
+
+  return { pokemon, selectedPokemon, favoriteArray, possibleTypes };
 };
 
 const singleton = pokemonService();

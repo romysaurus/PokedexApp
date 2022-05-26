@@ -10,33 +10,10 @@
     <div id="pokemonTypes">
       <div
         id="type"
-        :class="
-          'fire' ||
-          'normal' ||
-          'water' ||
-          'electric' ||
-          'grass' ||
-          'ice' ||
-          'fighting' ||
-          'poison' ||
-          'ground' ||
-          'flying' ||
-          'Psychic' ||
-          'bug' ||
-          'rock' ||
-          'ghost' ||
-          'dragon' ||
-          'fairy'
-            ? firstType
-            : 'normal'
-        "
+        :class="possibleTypes.includes(firstType) ? firstType : 'normal'"
       >
         {{ firstType }}
       </div>
-      <!--  <q-badge
-        class="answer"
-        :label="`${secondType.charAt(0).toUpperCase() + firstType.slice(1)}`"
-      /> -->
 
       {{ secondType }}
     </div>
@@ -45,6 +22,7 @@
 </template>
 
 <script lang="ts">
+import { usePokemon } from 'src/services/pokemon.services';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -73,6 +51,12 @@ export default defineComponent({
     secondType: {
       type: String,
     },
+  },
+
+  setup() {
+    const { possibleTypes } = usePokemon();
+
+    return { possibleTypes };
   },
 });
 </script>
