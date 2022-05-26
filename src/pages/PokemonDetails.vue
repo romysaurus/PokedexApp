@@ -579,7 +579,7 @@ export default defineComponent({
 }
 
 .redHeart {
-  background-color: red;
+  color: red;
   margin-top: 1rem;
   margin-right: 1rem;
   font-size: 1.5rem;
