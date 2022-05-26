@@ -40,16 +40,24 @@
       <div>
         <vue-easy-lightbox
           :visible="visible"
-          :imgs="imageDefault"
+          :imgs="[imageDefault, imageShiny]"
           @hide="hideLightbox"
         ></vue-easy-lightbox>
-        <img
-          @click="visible = true"
-          class="center"
-          id="img"
-          :src="imageDefault"
-          alt=""
-        />
+
+        <div class="q-pa-md">
+          <q-carousel
+            swipeable
+            animated
+            v-model="slide"
+            thumbnails
+            infinite
+            @click="visible = true"
+            :class="possibleTypes.includes(firstType) ? firstType : 'normal'"
+          >
+            <q-carousel-slide :name="1" :img-src="imageDefault" />
+            <q-carousel-slide :name="2" :img-src="imageShiny" />
+          </q-carousel>
+        </div>
       </div>
 
       <div id="infoBody">
@@ -512,6 +520,8 @@ export default defineComponent({
       visible,
       hideLightbox,
       imageDefault,
+      imageShiny,
+      slide: ref(1),
       possibleTypes,
     };
   },

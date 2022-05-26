@@ -52,12 +52,12 @@ export default defineComponent({
 <style scoped>
 #body {
   background-image: linear-gradient(
-    to left bottom,
-    #339caf,
-    #2cafc0,
-    #23c1cf,
-    #1ad5de,
-    #12e8eb
+    to right bottom,
+    #7731ae,
+    #862fbe,
+    #972acd,
+    #a922dc,
+    #bb12eb
   );
   margin-top: -3rem;
   padding-bottom: 41rem;
