@@ -3,7 +3,7 @@
     <h4>Pokédex</h4>
 
     <div class="search">
-      <form @submit.prevent="pressed()">
+      <form @submit.prevent="pressed(search.toString())">
         <q-input
           filled
           v-model="search"
@@ -17,67 +17,65 @@
       </form>
     </div>
 
-    <div id="cardsContainer">
-      <CardComponent
-        :title="'Favorieten'"
-        :info="favoritesNumber + ' pokemons'"
-        @click="goToFavorites()"
+    <div v-if="searched">
+      <BackComponent id="back" @click="goBack()" />
+      <PokemonListComponent
+        v-for="(searchedPokemon, index) in filterPokemon"
+        :key="index"
+        :image="searchedPokemon.sprites.front_default"
+        :name="searchedPokemon.name"
+        :id="searchedPokemon.id"
+        :firstType="searchedPokemon.types[0].type.name"
+        @click="setPokemon(searchedPokemon)"
       />
     </div>
 
-    <q-page class="row items-center justify-evenly">
-      <div id="listContainer">
-        <PokemonListComponent
-          v-for="(pokemonInstance, index) in pokemon"
-          :key="index"
-          :image="pokemonInstance.sprites.front_default"
-          :name="pokemonInstance.name"
-          :id="pokemonInstance.id"
-          :firstType="pokemonInstance.types[0].type.name"
-          @click="setPokemon(pokemonInstance)"
+    <div v-if="!searched">
+      <div id="cardsContainer">
+        <CardComponent
+          :title="'Favorieten'"
+          :info="favoritesNumber + ' pokemons'"
+          @click="goToFavorites()"
         />
       </div>
-    </q-page>
+
+      <q-page class="row items-center justify-evenly">
+        <div id="listContainer">
+          <PokemonListComponent
+            v-for="(pokemonInstance, index) in pokemon"
+            :key="index"
+            :image="pokemonInstance.sprites.front_default"
+            :name="pokemonInstance.name"
+            :id="pokemonInstance.id"
+            :firstType="pokemonInstance.types[0].type.name"
+            @click="setPokemon(pokemonInstance)"
+          />
+        </div>
+      </q-page>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, Ref, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { usePokemon } from 'src/services/pokemon.services';
 import CardComponent from '../components/CardComponent.vue';
 import PokemonListComponent from '../components/PokemonListComponent.vue';
 import { Pokemon } from 'src/components/models';
 import { LocalStorage } from 'quasar';
+import BackComponent from '../components/BackComponent.vue';
 
 export default defineComponent({
   components: {
     PokemonListComponent,
     CardComponent,
+    BackComponent,
   },
   setup() {
     const { pokemon, selectedPokemon, favoriteArray } = usePokemon();
 
     const router = useRouter();
-
-    // ATTEMPT AT FUNCTION TO FILTER POKEMON AND PLACE IN ARRAY TO BE DISPLAYED AFTER SEARCH
-    //  COMPARISON PART WORKS, ERROR ON .PUSH
-
-    /*
-    const filterPokemon: Ref<Array<Pokemon>> = ref() as Ref<Array<Pokemon>>;
-
-    function filterItems(query: string) {
-      for (let i = 0; i < pokemon.value.length; i++) {
-        if (pokemon.value[i].name.includes(query.toLowerCase())) {
-          console.log(pokemon.value[i]);
-          //filterPokemon.value.push(test.value);
-        } else {
-          window.alert('nothing found!');
-        }
-      }
-    }
-
-    */
 
     if (localStorage.getItem('favoriteArray')) {
       const getLocalStorage: string = LocalStorage.getItem(
@@ -86,8 +84,6 @@ export default defineComponent({
       const localFavoriteArray: Array<Pokemon> = JSON.parse(
         getLocalStorage
       ) as Array<Pokemon>;
-
-      // console.log(localFavoriteArray);
 
       for (let i = 0; i < localFavoriteArray.length; i++) {
         if (
@@ -100,17 +96,32 @@ export default defineComponent({
     }
 
     const search = ref('');
+    const searched: Ref<boolean> = ref(false);
 
-    // ALTERNATE SEARCH, WORKS ONLY ON NUMBER AND REROUTES DIRECTLY TO DETAILS PAGE
+    const filterPokemon: Ref<Array<Pokemon>> = ref([]) as Ref<Array<Pokemon>>;
 
-    function pressed() {
-      if (+search.value <= 0 || +search.value > 151) {
-        window.alert(
-          'There are only 151 Pokémon. Enter a number between 1 and 151 (151 included)'
-        );
-      } else {
-        router.push({ path: `/${+search.value}` }).catch(console.error);
+    function pressed(searchItem: string) {
+      filterPokemon.value.splice(0, filterPokemon.value.length);
+      for (let i = 0; i < pokemon.value.length; i++) {
+        if (
+          pokemon.value[i].name.includes(searchItem) ||
+          pokemon.value[i].id.toString().includes(searchItem)
+        ) {
+          filterPokemon.value.push(pokemon.value[i]);
+        }
       }
+
+      if (filterPokemon.value.length === 0 || searchItem === '') {
+        window.alert('No Pokémon found');
+        searched.value = false;
+      } else {
+        searched.value = true;
+      }
+    }
+
+    function goBack() {
+      searched.value = false;
+      filterPokemon.value.splice(0, filterPokemon.value.length);
     }
 
     const boxShadow = 'inset 0 0 0 1000px rgb(122 59 225 / 93%)';
@@ -138,6 +149,9 @@ export default defineComponent({
       favoritesNumber,
       search,
       pressed,
+      searched,
+      filterPokemon,
+      goBack,
     };
   },
 });

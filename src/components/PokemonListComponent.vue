@@ -65,10 +65,10 @@ export default defineComponent({
 .listItem {
   display: flex;
   flex-direction: row;
-  margin: 1rem;
+  margin: 1rem 1rem 1rem 1.25rem;
   background-color: white;
   border-radius: 0.75rem;
-  box-shadow: 4px 3px 14px 1px rgba(255, 255, 255, 0.932);
+  //box-shadow: 4px 3px 14px 1px rgba(255, 255, 255, 0.932);
   width: 90%;
 }
 
@@ -104,7 +104,6 @@ export default defineComponent({
 }
 
 #pointSymbol {
-  padding-top: 1.5rem;
-  padding-left: 0.5rem;
+  padding: 1.5rem 0.75rem 0rem 0.5rem;
 }
 </style>

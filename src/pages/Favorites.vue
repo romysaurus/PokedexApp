@@ -51,7 +51,14 @@ export default defineComponent({
 
 <style scoped>
 #body {
-  background-color: rgb(241, 239, 239);
+  background-image: linear-gradient(
+    to left bottom,
+    #339caf,
+    #2cafc0,
+    #23c1cf,
+    #1ad5de,
+    #12e8eb
+  );
   margin-top: -3rem;
   padding-bottom: 24rem;
   padding-top: 4rem;
