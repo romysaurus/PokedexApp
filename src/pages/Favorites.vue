@@ -60,7 +60,7 @@ export default defineComponent({
     #12e8eb
   );
   margin-top: -3rem;
-  padding-bottom: 24rem;
+  padding-bottom: 41rem;
   padding-top: 4rem;
 }
 

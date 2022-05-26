@@ -33,8 +33,14 @@
     <div v-if="!searched">
       <div id="cardsContainer">
         <CardComponent
+          :title="'Mijn team'"
+          :info="amountInTeam + ' pokemons'"
+          :style="{ 'box-shadow': boxShadow }"
+          @click="goToTeam()"
+        />
+        <CardComponent
           :title="'Favorieten'"
-          :info="favoritesNumber + ' pokemons'"
+          :info="amountOfFavorites + ' pokemons'"
           @click="goToFavorites()"
         />
       </div>
@@ -73,7 +79,7 @@ export default defineComponent({
     BackComponent,
   },
   setup() {
-    const { pokemon, selectedPokemon, favoriteArray } = usePokemon();
+    const { pokemon, selectedPokemon, favoriteArray, teamArray } = usePokemon();
 
     const router = useRouter();
 
@@ -91,6 +97,22 @@ export default defineComponent({
           JSON.stringify(localFavoriteArray[i])
         ) {
           favoriteArray.value.push(localFavoriteArray[i]);
+        }
+      }
+    }
+
+    if (localStorage.getItem('teamArray')) {
+      const getLocal: string = LocalStorage.getItem('teamArray') as string;
+      const localTeamArray: Array<Pokemon> = JSON.parse(
+        getLocal
+      ) as Array<Pokemon>;
+
+      for (let i = 0; i < localTeamArray.length; i++) {
+        if (
+          JSON.stringify(teamArray.value[i]) !==
+          JSON.stringify(localTeamArray[i])
+        ) {
+          teamArray.value.push(localTeamArray[i]);
         }
       }
     }
@@ -127,8 +149,10 @@ export default defineComponent({
     const boxShadow = 'inset 0 0 0 1000px rgb(122 59 225 / 93%)';
 
     const favorites = favoriteArray.value;
+    const team = teamArray.value;
 
-    const favoritesNumber = favorites.length;
+    const amountOfFavorites = favorites.length;
+    const amountInTeam = team.length;
 
     function setPokemon(selectPokemon: Pokemon) {
       selectedPokemon.value = selectPokemon;
@@ -139,14 +163,19 @@ export default defineComponent({
       router.push({ path: '/favorieten' }).catch(console.error);
     }
 
+    function goToTeam() {
+      router.push({ path: '/team' }).catch(console.error);
+    }
+
     return {
       pokemon,
       boxShadow,
       setPokemon,
       goToFavorites,
+      goToTeam,
       selectedPokemon,
-      favoriteArray,
-      favoritesNumber,
+      amountOfFavorites,
+      amountInTeam,
       search,
       pressed,
       searched,
