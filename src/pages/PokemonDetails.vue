@@ -1,5 +1,14 @@
 <template>
+  <div v-if="loading">
+    <div class="q-pa-md q-gutter-xs center">
+      <div class="q-gutter-md row items-center">
+        <q-spinner-cube color="secondary" size="5.5em" />
+      </div>
+    </div>
+  </div>
+
   <div
+    v-else
     id="page"
     :class="possibleTypes.includes(firstType) ? firstType : 'normal'"
   >
@@ -29,286 +38,292 @@
       </div>
     </div>
 
-    <div id="pokemonStart" v-if="pokemonDetails">
-      <div id="name">
-        {{
-          pokemonDetails.forms[0].name.charAt(0).toUpperCase() +
-          pokemonDetails.forms[0].name.slice(1)
-        }}
-      </div>
-
-      <div>
-        <vue-easy-lightbox
-          :visible="visible"
-          :imgs="[imageDefault, imageShiny]"
-          @hide="hideLightbox"
-        ></vue-easy-lightbox>
-
-        <div class="q-pa-md">
-          <q-carousel
-            swipeable
-            animated
-            v-model="slide"
-            thumbnails
-            infinite
-            @click="visible = true"
-            :class="possibleTypes.includes(firstType) ? firstType : 'normal'"
-          >
-            <q-carousel-slide :name="1" :img-src="imageDefault" />
-            <q-carousel-slide :name="2" :img-src="imageShiny" />
-          </q-carousel>
+    <div>
+      <div id="pokemonStart" v-if="pokemonDetails">
+        <div id="name">
+          {{
+            pokemonDetails.forms[0].name.charAt(0).toUpperCase() +
+            pokemonDetails.forms[0].name.slice(1)
+          }}
         </div>
-      </div>
 
-      <div id="infoBody">
-        <!-- about section -->
-        <div id="about">
-          <div class="topText">ABOUT</div>
-          <div class="infoContainer">
-            <div id="description">Gotta catch 'em all!</div>
-            <div id="aboutList">
-              <div id="type">
-                <div class="info">Type</div>
-                <div class="answer typing">
-                  <div
-                    class="typePokemon"
-                    :class="
-                      possibleTypes.includes(firstType) ? firstType : 'normal'
-                    "
-                  >
-                    {{ firstType.charAt(0).toUpperCase() + firstType.slice(1) }}
+        <div>
+          <vue-easy-lightbox
+            :visible="visible"
+            :imgs="[imageDefault, imageShiny]"
+            @hide="hideLightbox"
+          ></vue-easy-lightbox>
+
+          <div class="q-pa-md">
+            <q-carousel
+              swipeable
+              animated
+              v-model="slide"
+              thumbnails
+              infinite
+              @click="visible = true"
+              :class="possibleTypes.includes(firstType) ? firstType : 'normal'"
+            >
+              <q-carousel-slide :name="1" :img-src="imageDefault" />
+              <q-carousel-slide :name="2" :img-src="imageShiny" />
+            </q-carousel>
+          </div>
+        </div>
+
+        <div id="infoBody">
+          <!-- about section -->
+          <div id="about">
+            <div class="topText">ABOUT</div>
+            <div class="infoContainer">
+              <div id="description">Gotta catch 'em all!</div>
+              <div id="aboutList">
+                <div id="type">
+                  <div class="info">Type</div>
+                  <div class="answer typing">
+                    <div
+                      class="typePokemon"
+                      :class="
+                        possibleTypes.includes(firstType) ? firstType : 'normal'
+                      "
+                    >
+                      {{
+                        firstType.charAt(0).toUpperCase() + firstType.slice(1)
+                      }}
+                    </div>
+                    <span
+                      class="typePokemon"
+                      :class="
+                        possibleTypes.includes(secondType)
+                          ? secondType
+                          : 'normal'
+                      "
+                      v-if="secondType"
+                    >
+                      {{
+                        secondType.charAt(0).toUpperCase() + secondType.slice(1)
+                      }}
+                    </span>
                   </div>
-                  <span
-                    class="typePokemon"
-                    :class="
-                      possibleTypes.includes(secondType) ? secondType : 'normal'
-                    "
-                    v-if="secondType"
-                  >
-                    {{
-                      secondType.charAt(0).toUpperCase() + secondType.slice(1)
-                    }}
-                  </span>
+                </div>
+                <div id="number">
+                  <div class="info">Nummer</div>
+                  <div class="answer">{{ pokemonDetails.id }}</div>
+                </div>
+                <div id="height">
+                  <div class="info">Hoogte</div>
+                  <div class="answer">{{ pokemonDetails.height / 10 }}m</div>
+                </div>
+
+                <div id="weight">
+                  <div class="info">Gewicht</div>
+                  <div class="answer">{{ pokemonDetails.weight / 10 }} kg</div>
+                </div>
+                <div id="sex">
+                  <div class="info">Geslacht</div>
+                  <div class="answer bold">&#9792; &#9794;</div>
+                </div>
+
+                <div id="ability">
+                  <div class="info">Vaardigheden</div>
+                  <div class="answer">
+                    {{ pokemonDetails.abilities[0].ability.name }}
+                  </div>
                 </div>
               </div>
-              <div id="number">
-                <div class="info">Nummer</div>
-                <div class="answer">{{ pokemonDetails.id }}</div>
-              </div>
-              <div id="height">
-                <div class="info">Hoogte</div>
-                <div class="answer">{{ pokemonDetails.height / 10 }}m</div>
-              </div>
+            </div>
+          </div>
 
-              <div id="weight">
-                <div class="info">Gewicht</div>
-                <div class="answer">{{ pokemonDetails.weight / 10 }} kg</div>
-              </div>
-              <div id="sex">
-                <div class="info">Geslacht</div>
-                <div class="answer bold">&#9792; &#9794;</div>
-              </div>
-
-              <div id="ability">
-                <div class="info">Vaardigheden</div>
-                <div class="answer">
-                  {{ pokemonDetails.abilities[0].ability.name }}
+          <!-- STATISTICS SECTION -->
+          <div id="statistics">
+            <div class="topText">STATISTIEKEN</div>
+            <div class="infoContainer">
+              <div id="hp">
+                <div class="statName">
+                  {{ pokemonDetails.stats[0].stat.name }}
                 </div>
+                <div class="statNumber">
+                  {{ pokemonDetails.stats[0].base_stat }}
+                </div>
+                <q-linear-progress
+                  v-if="pokemonDetails.stats[0].base_stat > 50"
+                  :value="pokemonDetails.stats[0].base_stat / 100"
+                  rounded
+                  color="positive"
+                  class="q-mt-sm statBar"
+                />
+                <q-linear-progress
+                  v-else
+                  :value="pokemonDetails.stats[0].base_stat / 100"
+                  rounded
+                  color="negative"
+                  class="q-mt-sm statBar"
+                />
+              </div>
+
+              <div id="attack">
+                <div class="statName">
+                  {{ pokemonDetails.stats[1].stat.name }}
+                </div>
+                <div class="statNumber">
+                  {{ pokemonDetails.stats[1].base_stat }}
+                </div>
+                <q-linear-progress
+                  v-if="pokemonDetails.stats[1].base_stat > 50"
+                  :value="pokemonDetails.stats[1].base_stat / 100"
+                  rounded
+                  color="positive"
+                  class="q-mt-sm statBar"
+                />
+                <q-linear-progress
+                  v-else
+                  :value="pokemonDetails.stats[1].base_stat / 100"
+                  rounded
+                  color="negative"
+                  class="q-mt-sm statBar"
+                />
+              </div>
+
+              <div id="defense">
+                <div class="statName">
+                  {{ pokemonDetails.stats[2].stat.name }}
+                </div>
+                <div class="statNumber">
+                  {{ pokemonDetails.stats[2].base_stat }}
+                </div>
+                <q-linear-progress
+                  v-if="pokemonDetails.stats[2].base_stat > 50"
+                  :value="pokemonDetails.stats[2].base_stat / 100"
+                  rounded
+                  color="positive"
+                  class="q-mt-sm statBar"
+                />
+                <q-linear-progress
+                  v-else
+                  :value="pokemonDetails.stats[2].base_stat / 100"
+                  rounded
+                  color="negative"
+                  class="q-mt-sm statBar"
+                />
+              </div>
+
+              <div id="spAttack">
+                <div class="statName">
+                  {{
+                    pokemonDetails.stats[3].stat.name.slice(0, 2) +
+                    '.' +
+                    pokemonDetails.stats[3].stat.name.charAt(8).toUpperCase() +
+                    pokemonDetails.stats[3].stat.name.slice(9)
+                  }}
+                </div>
+                <div class="statNumber">
+                  {{ pokemonDetails.stats[3].base_stat }}
+                </div>
+                <q-linear-progress
+                  v-if="pokemonDetails.stats[3].base_stat > 50"
+                  :value="pokemonDetails.stats[3].base_stat / 100"
+                  rounded
+                  color="positive"
+                  class="q-mt-sm statBar"
+                />
+                <q-linear-progress
+                  v-else
+                  :value="pokemonDetails.stats[3].base_stat / 100"
+                  rounded
+                  color="negative"
+                  class="q-mt-sm statBar"
+                />
+              </div>
+
+              <div id="spDefense">
+                <div class="statName">
+                  {{
+                    pokemonDetails.stats[4].stat.name.slice(0, 2) +
+                    '.' +
+                    pokemonDetails.stats[4].stat.name.charAt(8).toUpperCase() +
+                    pokemonDetails.stats[4].stat.name.slice(9)
+                  }}
+                </div>
+                <div class="statNumber">
+                  {{ pokemonDetails.stats[4].base_stat }}
+                </div>
+                <q-linear-progress
+                  v-if="pokemonDetails.stats[4].base_stat > 50"
+                  :value="pokemonDetails.stats[4].base_stat / 100"
+                  rounded
+                  color="positive"
+                  class="q-mt-sm statBar"
+                />
+                <q-linear-progress
+                  v-else
+                  :value="pokemonDetails.stats[4].base_stat / 100"
+                  rounded
+                  color="negative"
+                  class="q-mt-sm statBar"
+                />
+              </div>
+
+              <div id="speed">
+                <div class="statName">
+                  {{ pokemonDetails.stats[5].stat.name }}
+                </div>
+                <div class="statNumber">
+                  {{ pokemonDetails.stats[5].base_stat }}
+                </div>
+                <q-linear-progress
+                  v-if="pokemonDetails.stats[5].base_stat > 50"
+                  :value="pokemonDetails.stats[5].base_stat / 100"
+                  rounded
+                  color="positive"
+                  class="q-mt-sm statBar"
+                />
+                <q-linear-progress
+                  v-else
+                  :value="pokemonDetails.stats[5].base_stat / 100"
+                  rounded
+                  color="negative"
+                  class="q-mt-sm statBar"
+                />
               </div>
             </div>
           </div>
         </div>
 
-        <!-- STATISTICS SECTION -->
-        <div id="statistics">
-          <div class="topText">STATISTIEKEN</div>
-          <div class="infoContainer">
-            <div id="hp">
-              <div class="statName">
-                {{ pokemonDetails.stats[0].stat.name }}
+        <!-- MOVESET SECTION -->
+        <div id="moves">
+          <div class="topText">MOVESET</div>
+          <div id="moveContainer" class="infoContainer">
+            <div class="moveset">
+              <div class="level">
+                Level
+                {{ pokemonMoves[0].version_group_details[0].level_learned_at }}
               </div>
-              <div class="statNumber">
-                {{ pokemonDetails.stats[0].base_stat }}
+              <div class="moveName">
+                {{ pokemonMoves[0].move.name }}
               </div>
-              <q-linear-progress
-                v-if="pokemonDetails.stats[0].base_stat > 50"
-                :value="pokemonDetails.stats[0].base_stat / 100"
-                rounded
-                color="positive"
-                class="q-mt-sm statBar"
-              />
-              <q-linear-progress
-                v-else
-                :value="pokemonDetails.stats[0].base_stat / 100"
-                rounded
-                color="negative"
-                class="q-mt-sm statBar"
-              />
+              <div class="level">
+                Level
+                {{ pokemonMoves[1].version_group_details[0].level_learned_at }}
+              </div>
+              <div class="moveName">
+                {{ pokemonMoves[1].move.name }}
+              </div>
             </div>
 
-            <div id="attack">
-              <div class="statName">
-                {{ pokemonDetails.stats[1].stat.name }}
+            <div class="moveset">
+              <div class="level">
+                Level
+                {{ pokemonMoves[2].version_group_details[0].level_learned_at }}
               </div>
-              <div class="statNumber">
-                {{ pokemonDetails.stats[1].base_stat }}
+              <div class="moveName">
+                {{ pokemonMoves[2].move.name }}
               </div>
-              <q-linear-progress
-                v-if="pokemonDetails.stats[1].base_stat > 50"
-                :value="pokemonDetails.stats[1].base_stat / 100"
-                rounded
-                color="positive"
-                class="q-mt-sm statBar"
-              />
-              <q-linear-progress
-                v-else
-                :value="pokemonDetails.stats[1].base_stat / 100"
-                rounded
-                color="negative"
-                class="q-mt-sm statBar"
-              />
-            </div>
-
-            <div id="defense">
-              <div class="statName">
-                {{ pokemonDetails.stats[2].stat.name }}
+              <div class="level">
+                Level
+                {{ pokemonMoves[3].version_group_details[0].level_learned_at }}
               </div>
-              <div class="statNumber">
-                {{ pokemonDetails.stats[2].base_stat }}
+              <div class="moveName">
+                {{ pokemonMoves[3].move.name }}
               </div>
-              <q-linear-progress
-                v-if="pokemonDetails.stats[2].base_stat > 50"
-                :value="pokemonDetails.stats[2].base_stat / 100"
-                rounded
-                color="positive"
-                class="q-mt-sm statBar"
-              />
-              <q-linear-progress
-                v-else
-                :value="pokemonDetails.stats[2].base_stat / 100"
-                rounded
-                color="negative"
-                class="q-mt-sm statBar"
-              />
-            </div>
-
-            <div id="spAttack">
-              <div class="statName">
-                {{
-                  pokemonDetails.stats[3].stat.name.slice(0, 2) +
-                  '.' +
-                  pokemonDetails.stats[3].stat.name.charAt(8).toUpperCase() +
-                  pokemonDetails.stats[3].stat.name.slice(9)
-                }}
-              </div>
-              <div class="statNumber">
-                {{ pokemonDetails.stats[3].base_stat }}
-              </div>
-              <q-linear-progress
-                v-if="pokemonDetails.stats[3].base_stat > 50"
-                :value="pokemonDetails.stats[3].base_stat / 100"
-                rounded
-                color="positive"
-                class="q-mt-sm statBar"
-              />
-              <q-linear-progress
-                v-else
-                :value="pokemonDetails.stats[3].base_stat / 100"
-                rounded
-                color="negative"
-                class="q-mt-sm statBar"
-              />
-            </div>
-
-            <div id="spDefense">
-              <div class="statName">
-                {{
-                  pokemonDetails.stats[4].stat.name.slice(0, 2) +
-                  '.' +
-                  pokemonDetails.stats[4].stat.name.charAt(8).toUpperCase() +
-                  pokemonDetails.stats[4].stat.name.slice(9)
-                }}
-              </div>
-              <div class="statNumber">
-                {{ pokemonDetails.stats[4].base_stat }}
-              </div>
-              <q-linear-progress
-                v-if="pokemonDetails.stats[4].base_stat > 50"
-                :value="pokemonDetails.stats[4].base_stat / 100"
-                rounded
-                color="positive"
-                class="q-mt-sm statBar"
-              />
-              <q-linear-progress
-                v-else
-                :value="pokemonDetails.stats[4].base_stat / 100"
-                rounded
-                color="negative"
-                class="q-mt-sm statBar"
-              />
-            </div>
-
-            <div id="speed">
-              <div class="statName">
-                {{ pokemonDetails.stats[5].stat.name }}
-              </div>
-              <div class="statNumber">
-                {{ pokemonDetails.stats[5].base_stat }}
-              </div>
-              <q-linear-progress
-                v-if="pokemonDetails.stats[5].base_stat > 50"
-                :value="pokemonDetails.stats[5].base_stat / 100"
-                rounded
-                color="positive"
-                class="q-mt-sm statBar"
-              />
-              <q-linear-progress
-                v-else
-                :value="pokemonDetails.stats[5].base_stat / 100"
-                rounded
-                color="negative"
-                class="q-mt-sm statBar"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- MOVESET SECTION -->
-      <div id="moves">
-        <div class="topText">MOVESET</div>
-        <div id="moveContainer" class="infoContainer">
-          <div class="moveset">
-            <div class="level">
-              Level
-              {{ pokemonMoves[0].version_group_details[0].level_learned_at }}
-            </div>
-            <div class="moveName">
-              {{ pokemonMoves[0].move.name }}
-            </div>
-            <div class="level">
-              Level
-              {{ pokemonMoves[1].version_group_details[0].level_learned_at }}
-            </div>
-            <div class="moveName">
-              {{ pokemonMoves[1].move.name }}
-            </div>
-          </div>
-
-          <div class="moveset">
-            <div class="level">
-              Level
-              {{ pokemonMoves[2].version_group_details[0].level_learned_at }}
-            </div>
-            <div class="moveName">
-              {{ pokemonMoves[2].move.name }}
-            </div>
-            <div class="level">
-              Level
-              {{ pokemonMoves[3].version_group_details[0].level_learned_at }}
-            </div>
-            <div class="moveName">
-              {{ pokemonMoves[3].move.name }}
             </div>
           </div>
         </div>
@@ -352,6 +367,7 @@ export default defineComponent({
     const imageDefault: Ref<string> = ref('');
     const imageShiny: Ref<string> = ref('');
     const favorite: Ref<boolean> = ref(false);
+    const loading: Ref<boolean> = ref(true);
 
     function goBack() {
       router.go(-1);
@@ -389,6 +405,7 @@ export default defineComponent({
             if (pokemonDetails.value.types[1]) {
               secondType.value = pokemonDetails.value.types[1].type.name;
             }
+            loading.value = false;
           },
           (error) => {
             console.log(error);
@@ -513,6 +530,7 @@ export default defineComponent({
     return {
       selectedPokemon,
       goBack,
+      loading,
       pokemonDetails,
       deleteButton,
       editFavorites,
@@ -533,6 +551,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.center {
+  display: flex;
+  justify-content: center;
+  margin-top: 20rem;
+}
 #page {
   display: flex;
   flex-direction: column;
