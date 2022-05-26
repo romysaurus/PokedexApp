@@ -10,6 +10,10 @@ const routes: RouteRecordRaw[] = [
         path: '/favorieten',
         component: () => import('../pages/Favorites.vue'),
       },
+      {
+        path: '/team',
+        component: () => import('../pages/Team.vue'),
+      },
       { path: '/:id', component: () => import('pages/PokemonDetails.vue') },
     ],
   },

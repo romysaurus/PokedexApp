@@ -17,6 +17,7 @@ const pokemonService = () => {
     });
 
   const favoriteArray: Ref<Array<Pokemon>> = ref([]);
+  const teamArray: Ref<Array<Pokemon>> = ref([]);
 
   const selectedPokemon: Ref<Pokemon> = ref() as Ref<Pokemon>;
 
@@ -39,7 +40,7 @@ const pokemonService = () => {
     'fairy',
   ];
 
-  return { pokemon, selectedPokemon, favoriteArray, possibleTypes };
+  return { pokemon, selectedPokemon, favoriteArray, possibleTypes, teamArray };
 };
 
 const singleton = pokemonService();

@@ -6,13 +6,13 @@
 
     <div id="listContainer">
       <PokemonListComponent
-        v-for="(favorites, index) in favoriteArray"
+        v-for="(team, index) in teamArray"
         :key="index"
-        :image="favorites.sprites.front_default"
-        :name="favorites.name"
-        :id="favorites.id"
-        :firstType="favorites.types[0].type.name"
-        @click="setPokemon(favorites)"
+        :image="team.sprites.front_default"
+        :name="team.name"
+        :id="team.id"
+        :firstType="team.types[0].type.name"
+        @click="setPokemon(team)"
       />
     </div>
   </div>
@@ -32,7 +32,7 @@ export default defineComponent({
     BackComponent,
   },
   setup() {
-    const { favoriteArray, selectedPokemon } = usePokemon();
+    const { teamArray, selectedPokemon } = usePokemon();
     const router = useRouter();
 
     function goBack() {
@@ -44,7 +44,7 @@ export default defineComponent({
       router.push({ path: `/${selectPokemon.id}` }).catch(console.error);
     }
 
-    return { favoriteArray, goBack, setPokemon };
+    return { teamArray, goBack, setPokemon };
   },
 });
 </script>
