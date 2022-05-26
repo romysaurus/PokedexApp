@@ -364,7 +364,7 @@ export default defineComponent({
           router.push({ path: '/error' }).catch(console.error);
         }
 
-        const url = `https://pokeapi.co/api/v2/pokemon/${+id}?limit=151&offset=0`;
+        const url = `https://pokeapi.co/api/v2/pokemon/${+id}`;
         const selected: Ref<Pokemon> = ref(
           pokemon.value.find((poke) => poke.id === +id)
         ) as Ref<Pokemon>;

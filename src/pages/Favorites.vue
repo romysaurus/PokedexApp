@@ -73,6 +73,10 @@ export default defineComponent({
   margin-bottom: 1rem;
 }
 
+#pokemonTypes {
+  margin-left: 2rem;
+}
+
 @media only screen and (min-width: 768px) {
   #title,
   #listContainer {
