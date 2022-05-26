@@ -83,6 +83,45 @@ export default defineComponent({
 
     const router = useRouter();
 
+    const search = ref('');
+    const searched: Ref<boolean> = ref(false);
+
+    const filterPokemon: Ref<Array<Pokemon>> = ref([]) as Ref<Array<Pokemon>>;
+
+    function pressed(searchItem: string) {
+      filterPokemon.value.splice(0, filterPokemon.value.length);
+      for (let i = 0; i < pokemon.value.length; i++) {
+        if (
+          pokemon.value[i].name.includes(searchItem) ||
+          pokemon.value[i].id.toString().includes(searchItem)
+        ) {
+          filterPokemon.value.push(pokemon.value[i]);
+        }
+
+        if (
+          pokemon.value[i].types.findIndex(
+            (poke) => poke.type.name === searchItem
+          ) !== -1
+        ) {
+          filterPokemon.value.push(pokemon.value[i]);
+        }
+      }
+
+      if (filterPokemon.value.length === 0 || searchItem === '') {
+        window.alert('No Pokémon found');
+        searched.value = false;
+      } else {
+        searched.value = true;
+      }
+    }
+
+    function goBack() {
+      searched.value = false;
+      filterPokemon.value.splice(0, filterPokemon.value.length);
+    }
+
+    const boxShadow = 'inset 0 0 0 1000px rgb(122 59 225 / 93%)';
+
     if (localStorage.getItem('favoriteArray')) {
       const getLocalStorage: string = LocalStorage.getItem(
         'favoriteArray'
@@ -117,47 +156,8 @@ export default defineComponent({
       }
     }
 
-    const search = ref('');
-    const searched: Ref<boolean> = ref(false);
-
-    const filterPokemon: Ref<Array<Pokemon>> = ref([]) as Ref<Array<Pokemon>>;
-
-    function pressed(searchItem: string) {
-      filterPokemon.value.splice(0, filterPokemon.value.length);
-      for (let i = 0; i < pokemon.value.length; i++) {
-        if (
-          pokemon.value[i].name.includes(searchItem) ||
-          pokemon.value[i].id.toString().includes(searchItem)
-        ) {
-          filterPokemon.value.push(pokemon.value[i]);
-        }
-      }
-
-      if (filterPokemon.value.length === 0 || searchItem === '') {
-        window.alert('No Pokémon found');
-        searched.value = false;
-      } else {
-        searched.value = true;
-      }
-    }
-
-    function goBack() {
-      searched.value = false;
-      filterPokemon.value.splice(0, filterPokemon.value.length);
-    }
-
-    const boxShadow = 'inset 0 0 0 1000px rgb(122 59 225 / 93%)';
-
-    const favorites = favoriteArray.value;
-    const team = teamArray.value;
-
-    const amountOfFavorites = favorites.length;
-    const amountInTeam = team.length;
-
-    function setPokemon(selectPokemon: Pokemon) {
-      selectedPokemon.value = selectPokemon;
-      router.push({ path: `/${selectPokemon.id}` }).catch(console.error);
-    }
+    const amountOfFavorites = favoriteArray.value.length;
+    const amountInTeam = teamArray.value.length;
 
     function goToFavorites() {
       router.push({ path: '/favorieten' }).catch(console.error);
@@ -165,6 +165,11 @@ export default defineComponent({
 
     function goToTeam() {
       router.push({ path: '/team' }).catch(console.error);
+    }
+
+    function setPokemon(selectPokemon: Pokemon) {
+      selectedPokemon.value = selectPokemon;
+      router.push({ path: `/${selectPokemon.id}` }).catch(console.error);
     }
 
     return {
