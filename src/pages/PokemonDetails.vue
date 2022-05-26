@@ -332,6 +332,9 @@ export default defineComponent({
     watch(
       () => route.params.id,
       (id) => {
+        if (+id > 151) {
+          router.push({ path: '/error' }).catch(console.error);
+        }
         const url = `https://pokeapi.co/api/v2/pokemon/${+id}`;
         const selected: Ref<Pokemon> = ref(
           pokemon.value.find((poke) => poke.id === +id)
