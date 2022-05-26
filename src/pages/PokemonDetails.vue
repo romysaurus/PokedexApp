@@ -360,7 +360,11 @@ export default defineComponent({
     watch(
       () => route.params.id,
       (id) => {
-        const url = `https://pokeapi.co/api/v2/pokemon/${+id}`;
+        if (+id > 151) {
+          router.push({ path: '/error' }).catch(console.error);
+        }
+
+        const url = `https://pokeapi.co/api/v2/pokemon/${+id}?limit=151&offset=0`;
         const selected: Ref<Pokemon> = ref(
           pokemon.value.find((poke) => poke.id === +id)
         ) as Ref<Pokemon>;
@@ -571,11 +575,6 @@ export default defineComponent({
   width: 50%;
 }
 
-#img {
-  width: 24rem;
-  margin: -3rem 0rem;
-}
-
 .topText {
   margin: 1rem 1rem 0rem 1rem;
   padding-left: 0.25rem;
@@ -686,6 +685,10 @@ export default defineComponent({
     display: flex;
     flex-direction: row;
     align-items: center;
+  }
+
+  .q-pa-md {
+    width: 28rem;
   }
 
   #pokemonStart {

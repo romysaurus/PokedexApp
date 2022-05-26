@@ -32,7 +32,7 @@ const pokemonService = () => {
     'poison',
     'ground',
     'flying',
-    'Psychic',
+    'psychic',
     'bug',
     'rock',
     'ghost',
