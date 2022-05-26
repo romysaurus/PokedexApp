@@ -68,7 +68,6 @@ export default defineComponent({
   margin: 1rem 1rem 1rem 1.25rem;
   background-color: white;
   border-radius: 0.75rem;
-  //box-shadow: 4px 3px 14px 1px rgba(255, 255, 255, 0.932);
   width: 90%;
 }
 
