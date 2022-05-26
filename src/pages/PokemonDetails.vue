@@ -408,7 +408,7 @@ export default defineComponent({
             JSON.stringify(favoriteArray.value)
           );
         } else {
-          favoriteArray.value.splice(alreadyFavorite, alreadyFavorite);
+          favoriteArray.value.splice(alreadyFavorite, 1);
           localStorage.setItem(
             'favoriteArray',
             JSON.stringify(favoriteArray.value)
