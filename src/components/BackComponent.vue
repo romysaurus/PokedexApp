@@ -20,6 +20,7 @@ export default defineComponent({
   margin-left: 1rem;
   margin-top: 1rem;
   cursor: pointer;
+  color: white;
 }
 #backSymbol {
   font-size: 1.5rem;

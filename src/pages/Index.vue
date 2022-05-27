@@ -95,6 +95,12 @@ export default defineComponent({
       }
     }
 
+    const favoritesNumber = favoriteArray.value.length;
+
+    function goToFavorites() {
+      router.push({ path: '/favorieten' }).catch(console.error);
+    }
+
     const search = ref('');
     const searched: Ref<boolean> = ref(false);
 
@@ -124,24 +130,13 @@ export default defineComponent({
       filterPokemon.value.splice(0, filterPokemon.value.length);
     }
 
-    const boxShadow = 'inset 0 0 0 1000px rgb(122 59 225 / 93%)';
-
-    const favorites = favoriteArray.value;
-
-    const favoritesNumber = favorites.length;
-
     function setPokemon(selectPokemon: Pokemon) {
       selectedPokemon.value = selectPokemon;
       router.push({ path: `/${selectPokemon.id}` }).catch(console.error);
     }
 
-    function goToFavorites() {
-      router.push({ path: '/favorieten' }).catch(console.error);
-    }
-
     return {
       pokemon,
-      boxShadow,
       setPokemon,
       goToFavorites,
       selectedPokemon,
@@ -174,6 +169,10 @@ h4 {
 
 .search {
   margin: 1rem;
+}
+
+#back {
+  color: black;
 }
 
 #cardsContainer {

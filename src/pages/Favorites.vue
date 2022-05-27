@@ -52,7 +52,7 @@ export default defineComponent({
 <style scoped>
 #body {
   background-image: linear-gradient(
-    to left bottom,
+    to right,
     #339caf,
     #2cafc0,
     #23c1cf,
@@ -71,6 +71,7 @@ export default defineComponent({
   align-content: flex-start;
   margin-left: 1rem;
   margin-bottom: 1rem;
+  color: white;
 }
 
 @media only screen and (min-width: 768px) {
