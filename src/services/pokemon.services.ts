@@ -4,6 +4,7 @@ import { ref, Ref } from 'vue';
 
 const pokemonService = () => {
   const pokemon: Ref<Array<Pokemon>> = ref([]);
+  const load = ref(true);
 
   axios
     .get<Array<Pokemon>>(
@@ -11,6 +12,7 @@ const pokemonService = () => {
     )
     .then((response) => {
       pokemon.value = response.data;
+      load.value = false;
     })
     .catch((error) => {
       console.log(error);
@@ -40,7 +42,14 @@ const pokemonService = () => {
     'fairy',
   ];
 
-  return { pokemon, selectedPokemon, favoriteArray, possibleTypes, teamArray };
+  return {
+    pokemon,
+    selectedPokemon,
+    favoriteArray,
+    possibleTypes,
+    teamArray,
+    load,
+  };
 };
 
 const singleton = pokemonService();

@@ -45,19 +45,29 @@
         />
       </div>
 
-      <q-page class="row items-center justify-evenly">
-        <div id="listContainer">
-          <PokemonListComponent
-            v-for="(pokemonInstance, index) in pokemon"
-            :key="index"
-            :image="pokemonInstance.sprites.front_default"
-            :name="pokemonInstance.name"
-            :id="pokemonInstance.id"
-            :firstType="pokemonInstance.types[0].type.name"
-            @click="setPokemon(pokemonInstance)"
-          />
+      <div id="load" v-if="load">
+        <div class="q-pa-md q-gutter-xs center">
+          <div class="q-gutter-md row items-center">
+            <q-spinner-cube color="secondary" size="5.5em" />
+          </div>
         </div>
-      </q-page>
+      </div>
+
+      <div v-if="!load">
+        <q-page class="row items-center justify-evenly">
+          <div id="listContainer">
+            <PokemonListComponent
+              v-for="(pokemonInstance, index) in pokemon"
+              :key="index"
+              :image="pokemonInstance.sprites.front_default"
+              :name="pokemonInstance.name"
+              :id="pokemonInstance.id"
+              :firstType="pokemonInstance.types[0].type.name"
+              @click="setPokemon(pokemonInstance)"
+            />
+          </div>
+        </q-page>
+      </div>
     </div>
   </div>
 </template>
@@ -79,7 +89,8 @@ export default defineComponent({
     BackComponent,
   },
   setup() {
-    const { pokemon, selectedPokemon, favoriteArray, teamArray } = usePokemon();
+    const { pokemon, selectedPokemon, favoriteArray, teamArray, load } =
+      usePokemon();
 
     const router = useRouter();
 
@@ -173,6 +184,7 @@ export default defineComponent({
     }
 
     return {
+      load,
       pokemon,
       boxShadow,
       setPokemon,
@@ -192,6 +204,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
+#load {
+  display: flex;
+  justify-content: center;
+}
+
 #body {
   background-color: rgb(241, 239, 239);
   margin-top: -3rem;
@@ -208,6 +225,10 @@ h4 {
 
 .search {
   margin: 1rem;
+}
+
+#back {
+  color: black;
 }
 
 #cardsContainer {

@@ -298,14 +298,14 @@
                 {{ pokemonMoves[0].version_group_details[0].level_learned_at }}
               </div>
               <div class="moveName">
-                {{ pokemonMoves[0].move.name }}
+                {{ pokemonMoves[0].move.name.replace('-', ' ') }}
               </div>
               <div class="level">
                 Level
                 {{ pokemonMoves[1].version_group_details[0].level_learned_at }}
               </div>
               <div class="moveName">
-                {{ pokemonMoves[1].move.name }}
+                {{ pokemonMoves[1].move.name.replace('-', ' ') }}
               </div>
             </div>
 
@@ -315,14 +315,14 @@
                 {{ pokemonMoves[2].version_group_details[0].level_learned_at }}
               </div>
               <div class="moveName">
-                {{ pokemonMoves[2].move.name }}
+                {{ pokemonMoves[2].move.name.replace('-', ' ') }}
               </div>
               <div class="level">
                 Level
                 {{ pokemonMoves[3].version_group_details[0].level_learned_at }}
               </div>
               <div class="moveName">
-                {{ pokemonMoves[3].move.name }}
+                {{ pokemonMoves[3].move.name.replace('-', ' ') }}
               </div>
             </div>
           </div>

@@ -2,7 +2,7 @@
   <div id="body">
     <BackComponent @click="goBack()" />
 
-    <h4 id="title">Favorieten</h4>
+    <h4 id="title">Mijn team</h4>
 
     <div id="listContainer">
       <PokemonListComponent
@@ -52,12 +52,12 @@ export default defineComponent({
 <style scoped>
 #body {
   background-image: linear-gradient(
-    to right bottom,
-    #7731ae,
-    #862fbe,
-    #972acd,
-    #a922dc,
-    #bb12eb
+    to right,
+    #8239b2,
+    #8846b2,
+    #8d52b2,
+    #925eb1,
+    #9769b1
   );
   margin-top: -3rem;
   padding-bottom: 41rem;
@@ -65,6 +65,7 @@ export default defineComponent({
 }
 
 #title {
+  color: white;
   margin-top: 4rem;
   margin-bottom: 2rem;
   font-weight: 600;
