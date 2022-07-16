@@ -19,13 +19,10 @@
 
     <div v-if="searched">
       <BackComponent id="back" @click="goBack()" />
-      <PokemonListComponent
+      <PokemonListItem
         v-for="(searchedPokemon, index) in filterPokemon"
         :key="index"
-        :image="searchedPokemon.sprites.front_default"
-        :name="searchedPokemon.name"
-        :id="searchedPokemon.id"
-        :firstType="searchedPokemon.types[0].type.name"
+        :pokemon="searchedPokemon"
         @click="setPokemon(searchedPokemon)"
       />
     </div>
@@ -56,13 +53,10 @@
       <div v-if="!load">
         <q-page class="row items-center justify-evenly">
           <div id="listContainer">
-            <PokemonListComponent
+            <PokemonListItem
               v-for="(pokemonInstance, index) in pokemon"
               :key="index"
-              :image="pokemonInstance.sprites.front_default"
-              :name="pokemonInstance.name"
-              :id="pokemonInstance.id"
-              :firstType="pokemonInstance.types[0].type.name"
+              :pokemon="pokemonInstance"
               @click="setPokemon(pokemonInstance)"
             />
           </div>
@@ -77,14 +71,14 @@ import { defineComponent, Ref, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { usePokemon } from 'src/services/pokemon.services';
 import CardComponent from '../components/CardComponent.vue';
-import PokemonListComponent from '../components/PokemonListComponent.vue';
+import PokemonListItem from '../components/PokemonListItem.vue';
 import { Pokemon } from 'src/components/models';
 import { LocalStorage } from 'quasar';
 import BackComponent from '../components/BackComponent.vue';
 
 export default defineComponent({
   components: {
-    PokemonListComponent,
+    PokemonListItem,
     CardComponent,
     BackComponent,
   },
@@ -204,6 +198,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
+#listContainer {
+  width: 100%;
+  margin: 0rem 1rem 1rem 1rem;
+}
+
 #load {
   display: flex;
   justify-content: center;
@@ -235,6 +234,7 @@ h4 {
   display: flex;
   justify-content: center;
   margin: 1rem 1rem;
+  gap: 0.5rem;
 }
 
 @media only screen and (min-width: 768px) {

@@ -5,7 +5,7 @@
     <h4 id="title">Favorieten</h4>
 
     <div id="listContainer">
-      <PokemonListComponent
+      <PokemonListItem
         v-for="(favorites, index) in favoriteArray"
         :key="index"
         :image="favorites.sprites.front_default"
@@ -21,14 +21,14 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { usePokemon } from 'src/services/pokemon.services';
-import PokemonListComponent from '../components/PokemonListComponent.vue';
+import PokemonListItem from '../components/PokemonListItem.vue';
 import BackComponent from '../components/BackComponent.vue';
 import { useRouter } from 'vue-router';
 import { Pokemon } from 'src/components/models';
 
 export default defineComponent({
   components: {
-    PokemonListComponent,
+    PokemonListItem,
     BackComponent,
   },
   setup() {
