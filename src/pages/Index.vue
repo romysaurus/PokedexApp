@@ -6,6 +6,7 @@
       <form @submit.prevent="pressed(search.toString())">
         <q-input
           filled
+          rounded
           v-model="search"
           type="search"
           placeholder="Pokemon zoeken"
@@ -196,6 +197,12 @@ export default defineComponent({
   },
 });
 </script>
+
+<style>
+.q-field--filled.q-field--rounded .q-field__control {
+  border-radius: 28px;
+}
+</style>
 
 <style scoped>
 #listContainer {
