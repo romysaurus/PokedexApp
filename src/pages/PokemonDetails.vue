@@ -16,16 +16,8 @@
       <BackComponent id="back" @click="goBack()" />
 
       <q-btn
-        v-if="!deleteButton"
         class="teamButton"
-        label="Toevoegen aan team"
-        @click="editTeam(selectedPokemon)"
-      />
-
-      <q-btn
-        v-if="deleteButton"
-        class="teamButton"
-        label="Verwijderen uit team"
+        :label="!deleteButton ? 'Toevoegen aan team' : 'Verwijder uit team'"
         @click="editTeam(selectedPokemon)"
       />
 
@@ -341,7 +333,7 @@ import axios from 'axios';
 import { Move, Pokemon, PokemonDetails } from 'src/components/models';
 import VueEasyLightbox from 'vue-easy-lightbox';
 import { LocalStorage } from 'quasar';
-import useTeam from 'src/services/team.service';
+import { useTeam } from 'src/services/team.service';
 
 export default defineComponent({
   components: {
@@ -351,15 +343,10 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
-    const { addToTeam } = useTeam();
+    const { addToTeam, deletePokemonFromIndex, team, loadTeam } = useTeam();
 
-    const {
-      selectedPokemon,
-      favoriteArray,
-      teamArray,
-      pokemon,
-      possibleTypes,
-    } = usePokemon();
+    const { selectedPokemon, favoriteArray, pokemon, possibleTypes } =
+      usePokemon();
 
     const pokemonDetails: Ref<PokemonDetails> = ref() as Ref<PokemonDetails>;
 
@@ -370,6 +357,7 @@ export default defineComponent({
     const imageShiny: Ref<string> = ref('');
     const favorite: Ref<boolean> = ref(false);
     const loading: Ref<boolean> = ref(true);
+    const deleteButton: Ref<boolean> = ref(false);
 
     function goBack() {
       router.go(-1);
@@ -378,15 +366,23 @@ export default defineComponent({
     watch(
       () => route.params.id,
       (id) => {
+        loadTeam();
         if (+id > 151) {
           router.push({ path: '/error' }).catch(console.error);
         }
-
         const url = `https://pokeapi.co/api/v2/pokemon/${+id}`;
         const selected: Ref<Pokemon> = ref(
           pokemon.value.find((poke) => poke.id === +id)
         ) as Ref<Pokemon>;
         selectedPokemon.value = selected.value;
+        const alreadyTeam = team.value.findIndex(
+          (poke) => poke.name === selectedPokemon.value.name
+        );
+        console.log(alreadyTeam);
+        if (alreadyTeam !== -1) {
+          deleteButton.value = true;
+        }
+
         favorite.value = false;
         for (let index = 0; index < favoriteArray.value.length; index++) {
           if (
@@ -438,27 +434,6 @@ export default defineComponent({
       }
     }
 
-    if (localStorage.getItem('teamArray')) {
-      const getLocalStorage: string = LocalStorage.getItem(
-        'teamArray'
-      ) as string;
-      const localTeamArray: Array<Pokemon> = JSON.parse(
-        getLocalStorage
-      ) as Array<Pokemon>;
-
-      for (let i = 0; i < localTeamArray.length; i++) {
-        const name: string = localTeamArray[i].name;
-        if (name !== localTeamArray[i].name) {
-          if (
-            JSON.stringify(teamArray.value[i]) !==
-            JSON.stringify(localTeamArray[i])
-          ) {
-            teamArray.value.push(localTeamArray[i]);
-          }
-        }
-      }
-    }
-
     function editFavorites(selectPokemon: Pokemon) {
       const alreadyFavorite = favoriteArray.value.findIndex(
         (poke) => poke.name === selectPokemon.name
@@ -489,38 +464,21 @@ export default defineComponent({
       }
     }
 
-    const deleteButton: Ref<boolean> = ref(false);
-    const alreadyTeam = teamArray.value.findIndex(
-      (poke) => poke.name === selectedPokemon.value.name
-    );
-    if (alreadyTeam !== -1) {
-      deleteButton.value = true;
-    }
-
-    console.log(alreadyTeam);
-
-    function editTeam(selectPokemon: Pokemon) {
-      const alreadyTeam = teamArray.value.findIndex(
-        (poke) => poke.name === selectPokemon.name
+    function editTeam() {
+      const alreadyTeam = team.value.findIndex(
+        (poke) => poke.name === selectedPokemon.value.name
       );
 
-      console.log(alreadyTeam);
+      console.log('i', alreadyTeam);
 
-      if (teamArray.value.length === 6 && alreadyTeam === -1) {
+      if (team.value.length === 6) {
         window.alert('Reeds 6 Pokémon in team');
       } else if (alreadyTeam === -1) {
         addToTeam(selectedPokemon.value);
         deleteButton.value = false;
       } else {
-        if (alreadyTeam === 0) {
-          teamArray.value.shift();
-          localStorage.setItem('teamArray', JSON.stringify(teamArray.value));
-          deleteButton.value = true;
-        } else {
-          teamArray.value.splice(alreadyTeam, 1);
-          localStorage.setItem('teamArray', JSON.stringify(teamArray.value));
-          deleteButton.value = true;
-        }
+        deletePokemonFromIndex(alreadyTeam);
+        deleteButton.value = true;
       }
     }
 
