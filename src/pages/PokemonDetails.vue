@@ -341,6 +341,7 @@ import axios from 'axios';
 import { Move, Pokemon, PokemonDetails } from 'src/components/models';
 import VueEasyLightbox from 'vue-easy-lightbox';
 import { LocalStorage } from 'quasar';
+import useTeam from 'src/services/team.service';
 
 export default defineComponent({
   components: {
@@ -350,6 +351,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
+    const { addToTeam } = useTeam();
 
     const {
       selectedPokemon,
@@ -507,8 +509,7 @@ export default defineComponent({
       if (teamArray.value.length === 6 && alreadyTeam === -1) {
         window.alert('Reeds 6 Pokémon in team');
       } else if (alreadyTeam === -1) {
-        teamArray.value.push(selectPokemon);
-        localStorage.setItem('teamArray', JSON.stringify(teamArray.value));
+        addToTeam(selectedPokemon.value);
         deleteButton.value = false;
       } else {
         if (alreadyTeam === 0) {
