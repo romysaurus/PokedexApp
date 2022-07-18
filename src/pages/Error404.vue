@@ -3,7 +3,7 @@
     <div id="title">404</div>
 
     <img
-      src="..\..\public\img\confusedPsyduck.jpg"
+      src="\img\confusedPsyduck.jpg"
       alt="Imagine a confused Psyduck"
     />
 

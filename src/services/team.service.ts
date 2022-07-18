@@ -17,15 +17,12 @@ export const useTeam = () => {
   function deletePokemonFromIndex(index: number) {
     team.value.splice(index, 1);
     saveTeam();
-    console.log(index);
   }
 
   function loadTeam() {
     const teamFromStorage = LocalStorage.getItem('team') as string;
-
     if (teamFromStorage) {
       team.value = JSON.parse(teamFromStorage) as Array<Pokemon>;
-      console.log(typeof team.value);
     }
   }
 

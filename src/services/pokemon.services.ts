@@ -6,17 +6,17 @@ const pokemonService = () => {
   const pokemon: Ref<Array<Pokemon>> = ref([]);
   const load = ref(true);
 
-  axios
-    .get<Array<Pokemon>>(
-      'https://stoplight.io/mocks/appwise-be/pokemon/57519009/pokemon'
-    )
-    .then((response) => {
-      pokemon.value = response.data;
-      load.value = false;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  function loadPokemon(): Promise<Array<Pokemon> | void> {
+    return axios
+      .get<Array<Pokemon>>(
+        'https://stoplight.io/mocks/appwise-be/pokemon/57519009/pokemon'
+      )
+      .then((response) => {
+        pokemon.value = response.data;
+      })
+      .catch(console.error)
+      .finally(() => load.value = false);
+  }
 
   const favoriteArray: Ref<Array<Pokemon>> = ref([]);
   const teamArray: Ref<Array<Pokemon>> = ref([]);
@@ -49,6 +49,7 @@ const pokemonService = () => {
     possibleTypes,
     teamArray,
     load,
+    loadPokemon
   };
 };
 

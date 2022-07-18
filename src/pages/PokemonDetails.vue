@@ -18,7 +18,7 @@
       <q-btn
         class="teamButton"
         :label="!deleteButton ? 'Toevoegen aan team' : 'Verwijder uit team'"
-        @click="editTeam(selectedPokemon)"
+        @click="editTeam()"
       />
 
       <div
@@ -345,8 +345,13 @@ export default defineComponent({
     const route = useRoute();
     const { addToTeam, deletePokemonFromIndex, team, loadTeam } = useTeam();
 
-    const { selectedPokemon, favoriteArray, pokemon, possibleTypes } =
-      usePokemon();
+    const {
+      selectedPokemon,
+      favoriteArray,
+      pokemon,
+      possibleTypes,
+      loadPokemon,
+    } = usePokemon();
 
     const pokemonDetails: Ref<PokemonDetails> = ref() as Ref<PokemonDetails>;
 
@@ -365,22 +370,27 @@ export default defineComponent({
 
     watch(
       () => route.params.id,
-      (id) => {
+      async (id) => {
+        await loadPokemon();
         loadTeam();
-        if (+id > 151) {
-          router.push({ path: '/error' }).catch(console.error);
-        }
+
+        if (+id > 151) router.push({ path: '/error' }).catch(console.error);
+
         const url = `https://pokeapi.co/api/v2/pokemon/${+id}`;
-        const selected: Ref<Pokemon> = ref(
-          pokemon.value.find((poke) => poke.id === +id)
-        ) as Ref<Pokemon>;
-        selectedPokemon.value = selected.value;
-        const alreadyTeam = team.value.findIndex(
-          (poke) => poke.name === selectedPokemon.value.name
+        const pokemonFromId = pokemon.value.find(
+          (pokemon) => pokemon.id === +id
         );
-        console.log(alreadyTeam);
-        if (alreadyTeam !== -1) {
-          deleteButton.value = true;
+
+        if (pokemonFromId) {
+          selectedPokemon.value = pokemonFromId;
+          const isPokemonInTeam = team.value.findIndex(
+            (poke) => poke.name === selectedPokemon.value.name
+          );
+          if (isPokemonInTeam !== -1) {
+            deleteButton.value = true;
+          } else {
+            deleteButton.value = false;
+          }
         }
 
         favorite.value = false;
@@ -469,16 +479,14 @@ export default defineComponent({
         (poke) => poke.name === selectedPokemon.value.name
       );
 
-      console.log('i', alreadyTeam);
-
       if (team.value.length === 6) {
         window.alert('Reeds 6 Pokémon in team');
       } else if (alreadyTeam === -1) {
         addToTeam(selectedPokemon.value);
-        deleteButton.value = false;
+        deleteButton.value = true;
       } else {
         deletePokemonFromIndex(alreadyTeam);
-        deleteButton.value = true;
+        deleteButton.value = false;
       }
     }
 
