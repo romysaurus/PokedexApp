@@ -6,13 +6,10 @@
 
     <div id="listContainer">
       <PokemonListItem
-        v-for="(team, index) in teamArray"
+        v-for="(teamMember, index) in team"
         :key="index"
-        :image="team.sprites.front_default"
-        :name="team.name"
-        :id="team.id"
-        :firstType="team.types[0].type.name"
-        @click="setPokemon(team)"
+        :pokemon="teamMember"
+        @click="setPokemon(teamMember)"
       />
     </div>
   </div>
@@ -25,6 +22,7 @@ import PokemonListItem from '../components/PokemonListItem.vue';
 import BackComponent from '../components/BackComponent.vue';
 import { useRouter } from 'vue-router';
 import { Pokemon } from 'src/components/models';
+import { useTeam } from 'src/services/team.service';
 
 export default defineComponent({
   components: {
@@ -32,8 +30,9 @@ export default defineComponent({
     BackComponent,
   },
   setup() {
-    const { teamArray, selectedPokemon } = usePokemon();
+    const { selectedPokemon } = usePokemon();
     const router = useRouter();
+    const { team } = useTeam();
 
     function goBack() {
       router.go(-1);
@@ -44,7 +43,7 @@ export default defineComponent({
       router.push({ path: `/${selectPokemon.id}` }).catch(console.error);
     }
 
-    return { teamArray, goBack, setPokemon };
+    return { team, goBack, setPokemon };
   },
 });
 </script>

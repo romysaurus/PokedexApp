@@ -74,8 +74,9 @@ import { usePokemon } from 'src/services/pokemon.services';
 import CardComponent from '../components/CardComponent.vue';
 import PokemonListItem from '../components/PokemonListItem.vue';
 import { Pokemon } from 'src/components/models';
-import { LocalStorage } from 'quasar';
 import BackComponent from '../components/BackComponent.vue';
+import { useTeam } from 'src/services/team.service';
+import { useFavorites } from 'src/services/favorites.service';
 
 export default defineComponent({
   components: {
@@ -84,8 +85,11 @@ export default defineComponent({
     BackComponent,
   },
   setup() {
-    const { pokemon, selectedPokemon, favoriteArray, teamArray, load } =
-      usePokemon();
+    const { pokemon, selectedPokemon, load, loadPokemon } = usePokemon();
+
+    const { loadTeam, team } = useTeam();
+
+    const { loadFavorites, favorites } = useFavorites();
 
     const router = useRouter();
 
@@ -128,42 +132,8 @@ export default defineComponent({
 
     const boxShadow = 'inset 0 0 0 1000px rgb(122 59 225 / 93%)';
 
-    if (localStorage.getItem('favoriteArray')) {
-      const getLocalStorage: string = LocalStorage.getItem(
-        'favoriteArray'
-      ) as string;
-      const localFavoriteArray: Array<Pokemon> = JSON.parse(
-        getLocalStorage
-      ) as Array<Pokemon>;
-
-      for (let i = 0; i < localFavoriteArray.length; i++) {
-        if (
-          JSON.stringify(favoriteArray.value[i]) !==
-          JSON.stringify(localFavoriteArray[i])
-        ) {
-          favoriteArray.value.push(localFavoriteArray[i]);
-        }
-      }
-    }
-
-    if (localStorage.getItem('teamArray')) {
-      const getLocal: string = LocalStorage.getItem('teamArray') as string;
-      const localTeamArray: Array<Pokemon> = JSON.parse(
-        getLocal
-      ) as Array<Pokemon>;
-
-      for (let i = 0; i < localTeamArray.length; i++) {
-        if (
-          JSON.stringify(teamArray.value[i]) !==
-          JSON.stringify(localTeamArray[i])
-        ) {
-          teamArray.value.push(localTeamArray[i]);
-        }
-      }
-    }
-
-    const amountOfFavorites = favoriteArray.value.length;
-    const amountInTeam = teamArray.value.length;
+    const amountOfFavorites = favorites.value.length;
+    const amountInTeam = team.value.length;
 
     function goToFavorites() {
       router.push({ path: '/favorieten' }).catch(console.error);
@@ -193,6 +163,8 @@ export default defineComponent({
       searched,
       filterPokemon,
       goBack,
+      loadTeam,
+      loadFavorites,
     };
   },
 });

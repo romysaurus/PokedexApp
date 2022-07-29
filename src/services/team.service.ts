@@ -14,7 +14,7 @@ export const useTeam = () => {
     saveTeam();
   }
 
-  function deletePokemonFromIndex(index: number) {
+  function deleteTeamPokemonFromIndex(index: number) {
     team.value.splice(index, 1);
     saveTeam();
   }
@@ -26,5 +26,5 @@ export const useTeam = () => {
     }
   }
 
-  return { addToTeam, deletePokemonFromIndex, team, loadTeam };
+  return { addToTeam, deleteTeamPokemonFromIndex, team, loadTeam };
 };

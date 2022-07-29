@@ -24,7 +24,7 @@
       <div
         class="material-icons"
         :class="favorite ? 'redHeart' : 'heart'"
-        @click="editFavorites(selectedPokemon)"
+        @click="editFavorites()"
       >
         favorite_border
       </div>
@@ -330,10 +330,10 @@ import { usePokemon } from 'src/services/pokemon.services';
 import { useRouter, useRoute } from 'vue-router';
 import BackComponent from '../components/BackComponent.vue';
 import axios from 'axios';
-import { Move, Pokemon, PokemonDetails } from 'src/components/models';
+import { Move, PokemonDetails } from 'src/components/models';
 import VueEasyLightbox from 'vue-easy-lightbox';
-import { LocalStorage } from 'quasar';
 import { useTeam } from 'src/services/team.service';
+import { useFavorites } from 'src/services/favorites.service';
 
 export default defineComponent({
   components: {
@@ -343,11 +343,16 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
-    const { addToTeam, deletePokemonFromIndex, team, loadTeam } = useTeam();
+    const { addToTeam, deleteTeamPokemonFromIndex, team, loadTeam } = useTeam();
+    const {
+      favorites,
+      addToFavorites,
+      deleteFavoritePokemonFromIndex,
+      loadFavorites,
+    } = useFavorites();
 
     const {
       selectedPokemon,
-      favoriteArray,
       pokemon,
       possibleTypes,
       loadPokemon,
@@ -373,6 +378,7 @@ export default defineComponent({
       async (id) => {
         await loadPokemon();
         loadTeam();
+        loadFavorites();
 
         if (+id > 151) router.push({ path: '/error' }).catch(console.error);
 
@@ -394,9 +400,9 @@ export default defineComponent({
         }
 
         favorite.value = false;
-        for (let index = 0; index < favoriteArray.value.length; index++) {
+        for (let index = 0; index < favorites.value.length; index++) {
           if (
-            JSON.stringify(favoriteArray.value[index]) ===
+            JSON.stringify(favorites.value[index]) ===
             JSON.stringify(selectedPokemon.value)
           ) {
             favorite.value = true;
@@ -423,54 +429,17 @@ export default defineComponent({
       { immediate: true }
     );
 
-    if (localStorage.getItem('favoriteArray')) {
-      const getLocalStorage: string = LocalStorage.getItem(
-        'favoriteArray'
-      ) as string;
-      const localFavoriteArray: Array<Pokemon> = JSON.parse(
-        getLocalStorage
-      ) as Array<Pokemon>;
-
-      for (let i = 0; i < localFavoriteArray.length; i++) {
-        const name: string = localFavoriteArray[i].name;
-        if (name !== localFavoriteArray[i].name) {
-          if (
-            JSON.stringify(favoriteArray.value[i]) !==
-            JSON.stringify(localFavoriteArray[i])
-          ) {
-            favoriteArray.value.push(localFavoriteArray[i]);
-          }
-        }
-      }
-    }
-
-    function editFavorites(selectPokemon: Pokemon) {
-      const alreadyFavorite = favoriteArray.value.findIndex(
-        (poke) => poke.name === selectPokemon.name
+    function editFavorites() {
+      const alreadyFavorite = favorites.value.findIndex(
+        (poke) => poke.name === selectedPokemon.value.name
       );
 
       if (alreadyFavorite === -1) {
-        favoriteArray.value.push(selectPokemon);
         favorite.value = true;
-        localStorage.setItem(
-          'favoriteArray',
-          JSON.stringify(favoriteArray.value)
-        );
+        addToFavorites(selectedPokemon.value);
       } else {
         favorite.value = false;
-        if (alreadyFavorite === 0) {
-          favoriteArray.value.shift();
-          localStorage.setItem(
-            'favoriteArray',
-            JSON.stringify(favoriteArray.value)
-          );
-        } else {
-          favoriteArray.value.splice(alreadyFavorite, 1);
-          localStorage.setItem(
-            'favoriteArray',
-            JSON.stringify(favoriteArray.value)
-          );
-        }
+        deleteFavoritePokemonFromIndex(alreadyFavorite);
       }
     }
 
@@ -485,7 +454,7 @@ export default defineComponent({
         addToTeam(selectedPokemon.value);
         deleteButton.value = true;
       } else {
-        deletePokemonFromIndex(alreadyTeam);
+        deleteTeamPokemonFromIndex(alreadyTeam);
         deleteButton.value = false;
       }
     }

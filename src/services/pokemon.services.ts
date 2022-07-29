@@ -15,11 +15,8 @@ const pokemonService = () => {
         pokemon.value = response.data;
       })
       .catch(console.error)
-      .finally(() => load.value = false);
+      .finally(() => (load.value = false));
   }
-
-  const favoriteArray: Ref<Array<Pokemon>> = ref([]);
-  const teamArray: Ref<Array<Pokemon>> = ref([]);
 
   const selectedPokemon: Ref<Pokemon> = ref() as Ref<Pokemon>;
 
@@ -45,11 +42,9 @@ const pokemonService = () => {
   return {
     pokemon,
     selectedPokemon,
-    favoriteArray,
     possibleTypes,
-    teamArray,
     load,
-    loadPokemon
+    loadPokemon,
   };
 };
 

@@ -30,7 +30,7 @@ export default defineComponent({
 #card {
   width: 11rem;
   height: 6rem;
-  background-image: url(C:\Users\romys\Projects\PokedexApp\public\img\png-transparent-game-pokeball-pokemon-pokemon-go-pokemongo-pokestop-pokemon-go-addict-icon.png);
+  background-image: url('../../public/img/png-transparent-game-pokeball-pokemon-pokemon-go-pokemongo-pokestop-pokemon-go-addict-icon.png');
   background-position-x: 149%;
   background-position-y: 38%;
   background-repeat: no-repeat;

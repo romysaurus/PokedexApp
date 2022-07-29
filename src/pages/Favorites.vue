@@ -6,13 +6,10 @@
 
     <div id="listContainer">
       <PokemonListItem
-        v-for="(favorites, index) in favoriteArray"
+        v-for="(favorite, index) in favorites"
         :key="index"
-        :image="favorites.sprites.front_default"
-        :name="favorites.name"
-        :id="favorites.id"
-        :firstType="favorites.types[0].type.name"
-        @click="setPokemon(favorites)"
+        :pokemon="favorite"
+        @click="setPokemon(favorite)"
       />
     </div>
   </div>
@@ -25,6 +22,7 @@ import PokemonListItem from '../components/PokemonListItem.vue';
 import BackComponent from '../components/BackComponent.vue';
 import { useRouter } from 'vue-router';
 import { Pokemon } from 'src/components/models';
+import { useFavorites } from 'src/services/favorites.service';
 
 export default defineComponent({
   components: {
@@ -32,8 +30,9 @@ export default defineComponent({
     BackComponent,
   },
   setup() {
-    const { favoriteArray, selectedPokemon } = usePokemon();
+    const { selectedPokemon } = usePokemon();
     const router = useRouter();
+    const { favorites } = useFavorites();
 
     function goBack() {
       router.go(-1);
@@ -44,7 +43,7 @@ export default defineComponent({
       router.push({ path: `/${selectPokemon.id}` }).catch(console.error);
     }
 
-    return { favoriteArray, goBack, setPokemon };
+    return { favorites, goBack, setPokemon };
   },
 });
 </script>
