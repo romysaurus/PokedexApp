@@ -6,16 +6,16 @@ const pokemonService = () => {
   const pokemon: Ref<Array<Pokemon>> = ref([]);
   const load = ref(true);
 
-  function loadPokemon(): Promise<Array<Pokemon> | void> {
-    return axios
-      .get<Array<Pokemon>>(
-        'https://stoplight.io/mocks/appwise-be/pokemon/57519009/pokemon'
-      )
-      .then((response) => {
-        pokemon.value = response.data;
-      })
-      .catch(console.error)
-      .finally(() => (load.value = false));
+  function loadPokemon() {
+    if (!pokemon.value.length) {
+      axios.get<Array<Pokemon>>('https://stoplight.io/mocks/appwise-be/pokemon/57519009/pokemon')
+        .then(response => {
+          pokemon.value = response.data;
+        })
+        .catch(console.error);
+
+      load.value = false;
+    }
   }
 
   const selectedPokemon: Ref<Pokemon> = ref() as Ref<Pokemon>;

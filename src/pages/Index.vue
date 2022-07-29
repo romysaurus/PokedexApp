@@ -21,6 +21,7 @@
     <div v-if="searched">
       <BackComponent id="back" @click="goBack()" />
       <PokemonListItem
+        class="pokemon-list-item"
         v-for="(searchedPokemon, index) in filterPokemon"
         :key="index"
         :pokemon="searchedPokemon"
@@ -55,6 +56,7 @@
         <q-page class="row items-center justify-evenly">
           <div id="listContainer">
             <PokemonListItem
+              class="pokemon-list-item"
               v-for="(pokemonInstance, index) in pokemon"
               :key="index"
               :pokemon="pokemonInstance"
@@ -68,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from 'vue';
+import { defineComponent, onBeforeMount, Ref, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { usePokemon } from 'src/services/pokemon.services';
 import CardComponent from '../components/CardComponent.vue';
@@ -97,6 +99,10 @@ export default defineComponent({
     const searched: Ref<boolean> = ref(false);
 
     const filterPokemon: Ref<Array<Pokemon>> = ref([]) as Ref<Array<Pokemon>>;
+
+    onBeforeMount(() => {
+      loadPokemon();
+    });
 
     function pressed(searchItem: string) {
       filterPokemon.value.splice(0, filterPokemon.value.length);
@@ -214,6 +220,10 @@ h4 {
   justify-content: center;
   margin: 1rem 1rem;
   gap: 0.5rem;
+}
+
+.pokemon-list-item {
+  cursor: pointer;
 }
 
 @media only screen and (min-width: 768px) {

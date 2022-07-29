@@ -31,7 +31,7 @@
     </div>
 
     <div>
-      <div id="pokemonStart" v-if="pokemonDetails">
+      <div id="pokemon-start" v-if="pokemonDetails">
         <div id="name">
           {{
             pokemonDetails.forms[0].name.charAt(0).toUpperCase() +
@@ -375,8 +375,8 @@ export default defineComponent({
 
     watch(
       () => route.params.id,
-      async (id) => {
-        await loadPokemon();
+      (id) => {
+        loadPokemon();
         loadTeam();
         loadFavorites();
 
@@ -422,7 +422,7 @@ export default defineComponent({
             loading.value = false;
           },
           (error) => {
-            console.log(error);
+            console.error(error);
           }
         );
       },
@@ -650,7 +650,7 @@ export default defineComponent({
     width: 28rem;
   }
 
-  #pokemonStart {
+  #pokemon-start {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -670,5 +670,9 @@ export default defineComponent({
     width: 38rem;
     align-items: center;
   }
+}
+
+.q-carousel__slide {
+  cursor: pointer;
 }
 </style>

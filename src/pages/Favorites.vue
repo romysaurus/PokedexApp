@@ -6,6 +6,7 @@
 
     <div id="listContainer">
       <PokemonListItem
+        class="pokemon-list-item"
         v-for="(favorite, index) in favorites"
         :key="index"
         :pokemon="favorite"
@@ -75,6 +76,10 @@ export default defineComponent({
 
 #pokemonTypes {
   margin-left: 2rem;
+}
+
+.pokemon-list-item {
+  cursor: pointer;
 }
 
 @media only screen and (min-width: 768px) {

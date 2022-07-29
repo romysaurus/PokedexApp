@@ -6,6 +6,7 @@
 
     <div id="listContainer">
       <PokemonListItem
+        class="pokemon-list-item"
         v-for="(teamMember, index) in team"
         :key="index"
         :pokemon="teamMember"
@@ -71,6 +72,10 @@ export default defineComponent({
   align-content: flex-start;
   margin-left: 1rem;
   margin-bottom: 1rem;
+}
+
+.pokemon-list-item {
+  cursor: pointer;
 }
 
 @media only screen and (min-width: 768px) {
